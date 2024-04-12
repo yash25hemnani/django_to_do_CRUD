@@ -1,0 +1,58 @@
+{% extends 'tasks/main.html' %}
+
+{% block content %}
+<div class="card text-center">
+  <div class="card-header">
+    To-Do List
+  </div>
+  <div class="card-body">
+    <form method="POST" action="/">
+      {% csrf_token %}
+      <div class="form-group">
+        {{form.title}}
+      </div>
+      <input class="btn btn-primary" type="submit" value="Add Task">
+      <br>
+      <br>
+    </form>
+
+    <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Task</th>
+            <th scope="col">Completed</th>
+            <th scope="col">Created On</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for task in tasks %}
+        
+          <tr>
+            
+            <td>
+              {% if task.complete == True %}
+                <strike>{{task.title}}</strike>
+              {% else %}
+                {{task.title}}
+              {% endif %}
+            </td>
+            <td>{{task.complete}}</td>
+            <td>{{task.created}}</td>
+            <td>
+              <a href="{% url 'update_task' task.id %}" class="btn btn-info">Update</a>
+              <a href="{% url 'delete_task' task.id %}" class="btn btn-danger">Delete</a>
+              {% if task.complete == True %}
+                <a href="{% url 'resume_task' task.id %}" class="btn btn-warning">Resume</a>
+              {% else %}
+                <a href="{% url 'complete_task' task.id %}" class="btn btn-success">Complete</a>
+              {% endif %}
+            </td>
+          </tr>
+          
+        {% endfor %}
+        </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
